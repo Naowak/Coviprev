@@ -1,0 +1,32 @@
+﻿Colonne;Type ;Description_FR;Description_EN;Precisions;Exemple
+Reg;integer;Région;Region;;11
+anxiete;integer;Prévalences de l'anxiété dans le contexte de l’épidémie de Covid-19;Prevalence of anxiety in the context of the Covid-19 epidemic;"L’anxiété est mesurée par l’échelle HAD (Hospitality Anxiety and Depression scale ; score > 10).
+Un intervalle de confiance à 95% est indiqué. Les classes sont calculées avec la méthodes des quantiles.";19,4
+anxiete_inf;integer;Formule de la borne inférieure de l'intervalle de confiance;Confidence interval lower bound formula;;15,6
+anxiete_sup;integer;Formule de la borne supérieure de l'intervalle de confiance;Confidence interval upper bound formula;;23,9
+depression;integer;Prévalences de la dépression dans le contexte de l’épidémie de Covid-19;Prevalences of depression in the context of the Covid-19 epidemic;"La dépression est mesurée par l’échelle HAD (Hospitality Anxiety and Depression scale ; score > 10).
+Un intervalle de confiance à 95% est indiqué. Les classes sont calculées avec la méthodes des quantiles.";20,6
+depression_inf;integer;Formule de la borne inférieure de l'intervalle de confiance;Confidence interval lower bound formula;;16,7
+depression_sup;integer;Formule de la borne supérieure de l'intervalle de confiance;Confidence interval upper bound formula;;25,1
+pbsommeil;integer;Prévalences des problèmes de sommeil dans le contexte de l’épidémie de Covid-19;Prevalence of sleep problems in the context of the Covid-19 epidemic;"La question posée était « Diriez-vous qu’au cours des 8 derniers jours, vous avez eu des problèmes de sommeil… ? ». Les personnes ayant répondu ""un peu"" ou ""beaucoup"" à la question ont été considérées comme ayant des problèmes de sommeil.
+Les prévalences sont associées à un intervalle de confiance à 95%. Les classes sont calculées avec la méthode des quantiles.";63,5
+pbsommeil_inf;integer;Formule de la borne inférieure de l'intervalle de confiance;Confidence interval lower bound formula;;58,4
+pbsommeil_sup;integer;Formule de la borne supérieure de l'intervalle de confiance;Confidence interval upper bound formula;;68,4
+hyg4mes;integer;Prévalence de l'adoption systématique des 4 mesures d’hygiène;Prevalence of the systematic adoption of the 4 hygiene measures;"Les 4 mesures d’hygiène adoptées systématiquement : Se laver régulièrement les mains ; Saluer sans serrer la main et arrêter les embrassades ; Tousser dans son coude ; Utiliser un mouchoir à usage unique.
+Les moyennes sont associées à un intervalle de confiance à 95%. Les classes sont calculées avec la méthode des quantiles.";44,86
+hyg4mes_inf;integer;Formule de la borne inférieure de l'intervalle de confiance;Confidence interval lower bound formula;;39,73
+hyg4mes_sup;integer;Formule de la borne supérieure de l'intervalle de confiance;Confidence interval upper bound formula;;50,11
+nbmoy4mes;integer;"Nombre moyen et évolutions régionales des mesures d’hygiène systématiquement adoptées parmi les 4 mesures recommandées par les pouvoirs publics pendant l’épidémie de Covid-19 (moyennes ; données pondérées).";Average number of hygiene measures (among 4) systematically adopted;"Les 4 mesures d’hygiène adoptées systématiquement : Se laver régulièrement les mains ; Saluer sans serrer la main et arrêter les embrassades ; Tousser dans son coude ; Utiliser un mouchoir à usage unique.";
+dist3mes;integer;"Prévalences et évolutions régionales des problèmes de sommeil face à l’épidémie de Covid-19 (% ; données pondérées).";Prevalence of sleep problems in the context of the Covid-19 epidemic;"La question posée était « Diriez-vous qu’au cours des 8 derniers jours, vous avez eu des problèmes de sommeil… ? ». Les personnes ayant répondu ""un peu"" ou ""beaucoup"" à la question ont été considérées comme ayant des problèmes de sommeil.
+Les prévalences sont associées à un intervalle de confiance à 95%. Les classes sont calculées avec la méthode des quantiles.";66,99
+dist3mes_inf;integer;Formule de la borne inférieure de l'intervalle de confiance;Confidence interval lower bound formula;;61,91
+dist3mes_sup;integer;Formule de la borne supérieure de l'intervalle de confiance;Confidence interval upper bound formula;;71,7
+nbmoy7mes;integer;Nombre moyen de mesures adoptées systématiquement (sur 7 mesures);Average number of measures systematically adopted (out of 7 measures);"Les 7 mesures de prévention adoptées systématiquement : Se laver régulièrement les mains ; Saluer sans serrer la main ; Tousser dans son coude ; Utiliser un mouchoir à usage unique ; Rester confiné à la maison ; Limiter toutes formes d'interactions ; Garder une distance d'au moins un mètre.";5,61
+nbmoy7mes_inf;integer;Formule de la borne inférieure de l'intervalle de confiance;Confidence interval lower bound formula;;5,45
+nbmoy7mes_sup;integer;Formule de la borne supérieure de l'intervalle de confiance;Confidence interval upper bound formula;;5,77
+dist1m;integer;Adoption systématique de la distance d’un mètre;Systematic adoption of the distance of one meter;"La question posée était : « Au cours des derniers jours, avez-vous adopté la mesure ‘Garder une distance d’au moins un mètre avec les autres personnes dans les magasins, les marchés, les lieux publics ou dehors’ ? ». N’ont été retenues que les personnes ayant déclaré adopter « systématiquement » cette mesure.
+Les prévalences sont associées à un intervalle de confiance à 95%. Les classes sont calculées avec la méthode des quantiles.";
+dist1m_inf;integer;Formule de la borne inférieure de l'intervalle de confiance;Confidence interval lower bound formula;;
+dist1m_sup;integer;Formule de la borne supérieure de l'intervalle de confiance;Confidence interval upper bound formula;;
+portmasque;integer;"Prévalences et évolutions régionales de l’adoption systématique du port du masque en public pendant l’épidémie de Covid-19 (% ; données pondérées).";Prevalences of the systematic adoption of the mask in public during the Covid-19 epidemic;"La question posée était : « Au cours des derniers jours, avez-vous adopté la mesure ‘Porter un masque en public’ ? ». N’ont été retenues que les personnes ayant déclaré adopter « systématiquement » cette mesure.
+Les prévalences sont associées à un intervalle de confiance à 95%. Les classes sont calculées avec la méthode des quantiles.";
