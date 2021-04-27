@@ -1,79 +1,88 @@
-
-import pandas as pd
-from plotly import graph_objects as go
-from dash import Dash
+import dash
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-
-# Load geojson file
-with open('data/regions.geojson', 'r') as f:
-    france = eval(f.read())
-
-
-# Load data
-df = pd.read_csv('data/coviprevs_formatted.csv')
-df = df.replace('Grand-Est', 'Grand Est').dropna()
-targets = df.drop(['region', 'date'], axis=1).columns
-df[targets] = df[targets]*100
-
-translation = {'anxiete_target': 'Anxiété',
-                'depression_target': 'Dépression',
-                'pbsommeil_target': 'Problèmes de sommeil',
-                'hyg4mes_target': 'Distanciation sociale',
-                'portmasque_target': 'Port du masque'}
-cibles = [{'label': l, 'value': v} for v, l in translation.items()]
-
-ranges = {'anxiete_target': [0, 35],
-            'depression_target': [0, 35],
-            'pbsommeil_target': [45, 85],
-            'hyg4mes_target': [15, 65],
-            'portmasque_target': [0, 90]}
-
-
-# Plot functions
-def plot_map(cible):
-    fig = go.Figure(data=go.Choropleth(
-        locations=df['region'],
-        z=df[cible],
-        locationmode='geojson-id',
-        geojson=france,
-        featureidkey='properties.nom',
-        hovertemplate="%{text}" "%{z}<extra></extra>",
-        text=["<b>"+x+f"</b><br>{translation[cible]}:   " for x in df['region']],
-        colorscale='Reds',
-        colorbar_title=translation[cible],
-    ))
-    fig.update_geos(fitbounds="geojson", visible=False)
-    return fig
+from dataloader import plot_target, targets, labels, colors
 
 
 # Build App
-app = Dash(__name__)
+app = dash.Dash(__name__, 
+        external_stylesheets=[dbc.themes.BOOTSTRAP,
+                            'https://codepen.io/chriddyp/pen/bWLwgP.css'])
 
 
 # Build Layout
 app.layout = html.Div([
-    html.H1('CoviPrev par région'),
-    html.Label([
-        'Cible',
-        dcc.Dropdown(
-            id='cible-dropdown', clearable=False,
-            value=cibles[0]['value'], options=cibles)
+
+    html.Div([
+        dbc.Navbar(
+            [
+                dbc.Row(
+                    [
+                        dbc.Col(html.Img(src='assets/logo.png', height="50px")),
+                        dbc.Col(dbc.NavbarBrand("Naowak", className="navbar-domain")),
+                    ],
+                    align="center",
+                    no_gutters=True,
+                ),
+            ],
+            color=colors['dark'],
+            dark=True,
+        )
     ]),
-    dcc.Graph(
-        id='graph', 
-        figure=plot_map(cibles[0]['value']),
-        config={'displayModeBar': False, 'scrollZoom': False}),
+
+    html.Div([
+        html.H2(children='Visualisation des données Coviprev', className='title')
+    ]),
+        
+    html.Div([
+        dbc.ListGroup(
+            [dbc.ListGroupItem(
+                children=v,
+                id='item-' + str(i), 
+                n_clicks=0,
+                color=colors['light'] if i == 0 else colors['dark']) 
+            for i, v in enumerate(labels)], 
+            horizontal=True,
+            className='targets'
+        )
+    ], className='row'),
+
+    html.Div([
+        dcc.Graph(
+            id='graph', 
+            figure=plot_target(targets[0]),
+            config={'displayModeBar': False, 'scrollZoom': False},
+            className='map')
+    ], className='row')
+
 ])
 
 
-# Define callback to update graph
-@app.callback(Output('graph', 'figure'), 
-                [Input('cible-dropdown', 'value')])
-def update_figure(cible):
-    return plot_map(cible)
+# Define callback to update the target
+@app.callback([Output(f'item-{i}', 'color') for i in range(len(targets))]
+                + [Output('graph', 'figure')],
+            [Input(f'item-{i}', 'n_clicks') for i in range(len(targets))])
+def update_target(*args):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        index = 0
+    else:
+        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+        index = int(button_id[-1])
+
+    returns = []
+    for i in range(len(targets)):
+        if index == i:
+            returns += [colors['light']]
+        else:
+            returns += [colors['dark']]
+
+    returns += [plot_target(targets[index])]
+
+    return returns 
 
 
 # Run app and display result inline in the notebook
