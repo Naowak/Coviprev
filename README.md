@@ -2,6 +2,8 @@
 
 Ce projet a pour but de visualiser les données Coviprev extraitent par l'équipe PsyCovid lors du Hackathon Covid19 qui a eu lieu le 23 et 24 avril 2021.
 
+![Screenshot](assets/screenshot.png)
+
 # Installation
 Pour cloner le dépôt
 ```bash
