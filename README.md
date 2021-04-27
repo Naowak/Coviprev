@@ -32,7 +32,7 @@ https://www.data.gouv.fr/fr/datasets/donnees-denquete-relatives-a-levolution-des
 Le lien vers le projet github de l'équipe PsyCovid:  
 https://github.com/babash/hackhathon_covid19  
 
-Membre du groupe PsyCovid:
+Membres du groupe PsyCovid:
 - BAKALARA Johanne, doctorante
 - CONNES Victor, doctorant
 - GUYET Thomas, enseignant-chercheur
