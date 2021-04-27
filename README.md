@@ -20,6 +20,10 @@ Vous pouvez maintenant lancer l'interface
 ```bash
 python main.py
 ```
+Et y accèder sur votre navigateur web via l'adresse
+```
+http://127.0.0.1:8050/
+```
 
 # Références
 Ces données peuvent être retrouvées brutes ici:  
