@@ -4,14 +4,17 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-from dataloader import plot_target, targets, labels, colors
+from dataloader import plot_target, targets, labels, colors, get_values, ranges
 
 
 # Build App
-app = dash.Dash(__name__, 
-        external_stylesheets=[dbc.themes.BOOTSTRAP,
-                            'https://codepen.io/chriddyp/pen/bWLwgP.css'])
+external_stylesheets = [dbc.themes.BOOTSTRAP,
+                        'https://codepen.io/chriddyp/pen/bWLwgP.css']
 
+app = dash.Dash(__name__, 
+                external_stylesheets=external_stylesheets)
+
+fig = plot_target(targets[0])
 
 # Build Layout
 app.layout = html.Div([
@@ -53,7 +56,7 @@ app.layout = html.Div([
     html.Div([
         dcc.Graph(
             id='graph', 
-            figure=plot_target(targets[0]),
+            figure=fig,
             config={'displayModeBar': False, 'scrollZoom': False},
             className='map')
     ], className='row')
@@ -63,7 +66,7 @@ app.layout = html.Div([
 
 # Define callback to update the target
 @app.callback([Output(f'item-{i}', 'color') for i in range(len(targets))]
-                + [Output('graph', 'figure')],
+            + [Output('graph', 'figure')],
             [Input(f'item-{i}', 'n_clicks') for i in range(len(targets))])
 def update_target(*args):
     ctx = dash.callback_context
@@ -80,10 +83,19 @@ def update_target(*args):
         else:
             returns += [colors['dark']]
 
-    returns += [plot_target(targets[index])]
+    values = get_values(targets[index])
+    fig.__dict__['_data_objs'][0]['z'] = values[0]
+    for i, val in enumerate(values):
+        fig.__dict__['_frame_objs'][i]['data'][0]['z'] = val
 
-    return returns 
+    crange = ranges[targets[index]]
+    fig.update_layout(coloraxis={'cmin': crange[0], 'cmax': crange[1]})
+
+    returns += [fig]
+
+    return returns
 
 
-# Run app and display result inline in the notebook
-app.run_server()
+if __name__ == '__main__':
+    # Run app and display result inline in the notebook
+    app.run_server()

@@ -15,11 +15,11 @@ targets = ['anxiete_target', 'depression_target', 'pbsommeil_target',
 labels = ['Anxiété', 'Dépression', 'Problèmes de sommeil', 
                                 'Distanciation sociale', 'Port du masque']
 
-ranges = {'anxiete_target': [0, 35],
-            'depression_target': [0, 35],
-            'pbsommeil_target': [45, 85],
-            'hyg4mes_target': [15, 65],
-            'portmasque_target': [0, 90]}
+ranges = {'anxiete_target': [8, 28],
+            'depression_target': [5, 28],
+            'pbsommeil_target': [52, 78],
+            'hyg4mes_target': [23, 57],
+            'portmasque_target': [9, 84]}
 
 colors = {'background': '#F9F9F9', 
             'light': '#669DE6',
@@ -33,6 +33,12 @@ titles = {'anxiete_target': 'Part de la population étant anxieuse par date et r
             'portmasque_target': 'Part de la population respectant le port du masque par date et région'}
 
 
+def get_values(cible):
+    columns = [cible, 'date']
+    df = coviprev[columns].groupby('date')[cible].apply(list)
+    return df.values
+
+
 # Plot functions
 def plot_target(cible):
     fig = px.choropleth(coviprev,
@@ -43,8 +49,7 @@ def plot_target(cible):
                 animation_frame='date',
                 title=titles[cible],
                 labels=dict(zip(targets, [l + ' (%)' for l in labels])),
-                color_continuous_scale=['#FFFFFF', colors['show']], 
-                range_color=ranges[cible])
+                color_continuous_scale=['#FFFFFF', colors['show']])
 
     fig.update_traces(hovertemplate="<b>%{location}:</b> %{z}<extra></extra>")
 
@@ -56,6 +61,7 @@ def plot_target(cible):
     fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
                     geo=dict(bgcolor='rgba(0,0,0,0)'),
+                    coloraxis=dict(zip(['cmin', 'cmax'], ranges['anxiete_target'])),
                     height=700,
                     width=1200)
     fig["layout"].pop("updatemenus")
