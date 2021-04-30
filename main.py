@@ -1,3 +1,4 @@
+from flask import Flask
 import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -11,7 +12,10 @@ from dataloader import plot_target, targets, labels, colors, get_values, ranges
 external_stylesheets = [dbc.themes.BOOTSTRAP,
                         'https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, 
+server = Flask(__name__)
+
+app = dash.Dash(__name__,
+                server=server,
                 external_stylesheets=external_stylesheets)
 
 fig = plot_target(targets[0])
@@ -39,7 +43,7 @@ app.layout = html.Div([
     html.Div([
         html.H2(children='Visualisation des données Coviprev', className='title')
     ]),
-        
+
     html.Div([
         dbc.ListGroup(
             [dbc.ListGroupItem(
@@ -98,4 +102,5 @@ def update_target(*args):
 
 if __name__ == '__main__':
     # Run app and display result inline in the notebook
-    app.run_server(host='0.0.0.0', port=14000)
+#    app.run_server(host='0.0.0.0', port=14000)
+    server.run()
