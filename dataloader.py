@@ -41,15 +41,24 @@ def get_values(cible):
 
 # Plot functions
 def plot_target(cible):
-    fig = px.choropleth(coviprev,
-                geojson=france, 
-                featureidkey='properties.nom',
-                locations='region', 
-                color=cible,
-                animation_frame='date',
-                title=titles[cible],
-                labels=dict(zip(targets, [l + ' (%)' for l in labels])),
-                color_continuous_scale=['#FFFFFF', colors['show']])
+    # fig = px.choropleth(coviprev,
+    #             geojson=france, 
+    #             featureidkey='properties.nom',
+    #             locations='region', 
+    #             color=cible,
+    #             animation_frame='date',
+    #             title=titles[cible],
+    #             labels=dict(zip(targets, [l + ' (%)' for l in labels])),
+    #             color_continuous_scale=['#FFFFFF', colors['show']])
+    fig = px.choropleth_mapbox(coviprev, geojson=france, locations='region', color='depression_target',
+                            featureidkey='properties.nom',
+                           color_continuous_scale='Reds',
+                           range_color=(0, 0.5),
+                           mapbox_style="carto-positron",
+                           animation_frame='date',
+                           zoom=4.5, center = {"lat": 46.71109, "lon": 1.7191036},
+                           opacity=0.5,
+                           labels={'unemp':'unemployment rate'})
 
     fig.update_traces(hovertemplate="<b>%{location}:</b> %{z}<extra></extra>")
 

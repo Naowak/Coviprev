@@ -1,3 +1,4 @@
+from flask import Flask
 import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -11,14 +12,28 @@ from dataloader import plot_target, targets, labels, colors, get_values, ranges
 external_stylesheets = [dbc.themes.BOOTSTRAP,
                         'https://codepen.io/chriddyp/pen/bWLwgP.css']
 
+server = Flask(__name__)
+
 app = dash.Dash(__name__, 
+                server=server,
                 external_stylesheets=external_stylesheets)
 
 fig = plot_target(targets[0])
 
+
+
 # Build Layout
+off_button_style = {'background-color': colors['dark'],
+                      'color': 'white',
+                      'height': '50px'}
+
+on_button_style = {'background-color': colors['light'],
+                    'color': 'white',
+                    'height': '50px'}
+
 app.layout = html.Div([
 
+    # Navbar
     html.Div([
         dbc.Navbar(
             [
@@ -36,39 +51,47 @@ app.layout = html.Div([
         )
     ]),
 
+    # Titre
     html.Div([
         html.H2(children='Visualisation des données Coviprev', className='title')
     ]),
-        
-    html.Div([
-        dbc.ListGroup(
-            [dbc.ListGroupItem(
-                children=v,
-                id='item-' + str(i), 
-                n_clicks=0,
-                color=colors['light'] if i == 0 else colors['dark']) 
-            for i, v in enumerate(labels)], 
-            horizontal=True,
-            className='targets'
-        )
-    ], className='row'),
+    
+    # Targets
+    html.Div(
+        [
+            html.Div(
+                [
+                    html.Button(
+                        children=v,
+                        id='button-' + str(i), 
+                        n_clicks=0,
+                        style=on_button_style if i == 0 else off_button_style)
+                    for i, v in enumerate(labels)
+                ], className='targets'
+            )
+        ], className='row'
+    ),
 
-    html.Div([
-        dcc.Graph(
-            id='graph', 
-            figure=fig,
-            config={'displayModeBar': False, 'scrollZoom': False},
-            className='map')
-    ], className='row')
+    # Map
+    html.Div(
+        [
+            dcc.Graph(
+                id='graph', 
+                figure=fig,
+                config={'displayModeBar': False, 'scrollZoom': False},
+                className='map')
+        ], className='row'
+    )
 
 ])
 
 
 # Define callback to update the target
-@app.callback([Output(f'item-{i}', 'color') for i in range(len(targets))]
+@app.callback([Output(f'button-{i}', 'style') for i in range(len(targets))]
             + [Output('graph', 'figure')],
-            [Input(f'item-{i}', 'n_clicks') for i in range(len(targets))])
+            [Input(f'button-{i}', 'n_clicks') for i in range(len(targets))])
 def update_target(*args):
+    # Catch the target
     ctx = dash.callback_context
     if not ctx.triggered:
         index = 0
@@ -76,13 +99,15 @@ def update_target(*args):
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
         index = int(button_id[-1])
 
+    # Indicate colors of buttons
     returns = []
     for i in range(len(targets)):
         if index == i:
-            returns += [colors['light']]
+            returns += [on_button_style]
         else:
-            returns += [colors['dark']]
+            returns += [off_button_style]
 
+    # Update figure values : 0.006s againt more than 1s to create new fig
     values = get_values(targets[index])
     fig.__dict__['_data_objs'][0]['z'] = values[0]
     for i, val in enumerate(values):
@@ -98,4 +123,4 @@ def update_target(*args):
 
 if __name__ == '__main__':
     # Run app and display result inline in the notebook
-    app.run_server(host='0.0.0.0', port=14000)
+    server.run()
