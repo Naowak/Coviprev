@@ -11,12 +11,15 @@ body {
 .title {
     color:#293241;
     text-align:center;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .targets {
     color: white;
+    margin-top:50px;
+    margin-bottom:50px;
     text-align:center;
-    margin-top:20px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -24,4 +27,4 @@ body {
 .map {
     margin-right: auto;
     margin-left: auto;
-}
+}   

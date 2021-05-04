@@ -4,7 +4,7 @@ import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+import textwrap
 
 from contents.utils import colors, on_button_style, off_button_style
 
@@ -24,8 +24,10 @@ with open('data/france-regions.geojson', 'r') as f:
 # Prepare variables
 targets = ['anxiete', 'depression', 'pbsommeil']
 labels = ['Anxiété', 'Dépression', 'Problèmes de sommeil']
-sentence1 = 'Part de la population {}'
-sentence2 = 'Part de la population {} par {}'
+legends = ['' for _ in range(len(targets))]
+
+sentence1 = 'Part de la population {} en %'
+sentence2 = 'Part de la population {} par {} en %'
 
 # For regions
 region_range = {target: [data['reg'][target].min(), data['reg'][target].max()] 
@@ -63,58 +65,118 @@ fra_title = {
 
 
 # Functions
+def get_values(criterion, cible):
+    columns = [cible, 'date']
+    df = data[criterion][columns].groupby('date')[cible].apply(list)
+    return df.values
+
+
 def plot_region(cible):
-    fig = px.choropleth_mapbox(
+    fig_region = px.choropleth_mapbox(
         data['reg'], 
         geojson=france, 
         locations='region', 
-        color='anxiete',
+        color=cible,
         featureidkey='properties.nom',
         mapbox_style="carto-positron",
         animation_frame='date',
         color_continuous_scale='Reds',
-        range_color=region_range['anxiete'],
+        range_color=region_range[cible],
         opacity=0.5,
         zoom=4.5, 
         center={"lat": 46.71109, "lon": 1.7191036},
-        title=region_title[cible],
-        labels=dict(zip(targets, [label + ' (%)' for label in labels])))
+        labels=dict(zip(targets, legends)))
 
-    fig.update_traces(hovertemplate="<b>%{location}:</b> %{z}<extra></extra>")
+    fig_region.update_traces(
+        hovertemplate="<b>%{location}:</b> %{z}<extra></extra>")
 
-    for frame in fig.frames:
+    for frame in fig_region.frames:
         frame['data'][0]['hovertemplate'] = \
             "<b>%{location}:</b> %{z}<extra></extra>"
     
-    fig.update_geos(fitbounds="geojson", visible=False)
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        coloraxis=dict(zip(['cmin', 'cmax'], region_range['anxiete'])),
-        height=700,
-        width=1200)
-    fig["layout"].pop("updatemenus")
+    fig_region.update_geos(fitbounds="geojson", visible=False)
 
-    return fig
+    fig_region.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        title=age_title[cible],
+        height=700,
+        width=900)
+
+
+    return fig_region
+
+
+def update_region(cible):
+    # Update figure values : 0.006s againt more than 1s to create new fig
+    values = get_values('reg', cible)
+    fig_region.__dict__['_data_objs'][0]['z'] = values[0]
+    for i, val in enumerate(values):
+        fig_region.__dict__['_frame_objs'][i]['data'][0]['z'] = val
+
+    crange = region_range[cible]
+    fig_region.update_layout(
+        coloraxis={'cmin': crange[0], 'cmax': crange[1]},
+        title=region_title[cible])
+
+    return fig_region
 
 
 def plot_age(cible):
-    return px.bar(data['age'], x='date', y=cible, 
+    fig_age = px.bar(data['age'], x='date', y=cible, 
                                     color='age', barmode='group')
+    fig_age.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        title=age_title[cible],
+        legend={'title': ''},
+        xaxis={'title': ''},
+        yaxis={'title': ''},
+        height=300,
+        width=900)
+
+    return fig_age
 
 
 def plot_sexe(cible):
-    return px.bar(data['sexe'], x='date', y=cible, 
+    fig_sexe = px.bar(data['sexe'], x='date', y=cible, 
                                     color='sexe', barmode='group')
+
+    fig_sexe.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        title=sexe_title[cible],
+        legend={'title': ''},
+        xaxis={'title': ''},
+        yaxis={'title': ''},
+        height=300,
+        width=900)
+
+    return fig_sexe
+
 
 
 def plot_fra(cible):
-    return px.bar(data['fra'], x='date', y=cible)
+    fig_fra = px.bar(data['fra'], x='date', y=cible)
+
+    fig_fra.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        title=fra_title[cible],
+        xaxis={'title': ''},
+        yaxis={'title': ''},
+        height=300,
+        width=900)
+
+    return fig_fra
 
 
 
 
 
 # Layout
+fig_region = plot_region(targets[0])
+fig_age = plot_age(targets[0])
+fig_sexe = plot_sexe(targets[0])
+fig_fra = plot_fra(targets[0])
+
+
 coviprev_layout = html.Div([
 
     # Navbar
@@ -124,7 +186,9 @@ coviprev_layout = html.Div([
                 dbc.Row(
                     [
                         dbc.Col(html.Img(src='assets/logo.png', height="50px")),
-                        dbc.Col(dbc.NavbarBrand("Naowak", className="navbar-domain")),
+                        dbc.Col(dbc.NavbarBrand(
+                            "Naowak  |  Visualisation des données Coviprev", 
+                            className="navbar-domain")),
                     ],
                     align="center",
                     no_gutters=True,
@@ -134,36 +198,57 @@ coviprev_layout = html.Div([
             dark=True,
         )
     ]),
-
-    # Titre
-    html.Div([
-        html.H2(children='Visualisation des données Coviprev', className='title')
-    ]),
     
-    # Targets
+    # Graphs
     html.Div(
-        [
+        [   
             html.Div(
                 [
-                    html.Button(
-                        children=v,
-                        id='button-' + str(i), 
-                        n_clicks=0,
-                        style=on_button_style if i == 0 else off_button_style)
-                    for i, v in enumerate(labels)
-                ], className='targets'
-            )
-        ], className='row'
-    ),
+                    html.Div(
+                        [
+                            html.Button(
+                                children=v,
+                                id='button-' + str(i), 
+                                n_clicks=0,
+                                style=on_button_style if i == 0 else off_button_style)
+                            for i, v in enumerate(labels)
+                        ], className='targets'
+                    ),
 
-    # Map
-    html.Div(
-        [
-            dcc.Graph(
-                id='graph', 
-                figure=plot_region(targets[0]),
-                config={'displayModeBar': False, 'scrollZoom': False},
-                className='map')
+                    html.Div(
+                        [
+                            dcc.Graph(
+                                id='graph-region', 
+                                figure=fig_region,
+                                config={'displayModeBar': False, 'scrollZoom': False},
+                                className='map')
+                        ], className='row'
+                    )
+
+                ], className='col'),
+
+            html.Div(
+                [
+                    dcc.Graph(
+                        id='graph-fra', 
+                        figure=fig_fra,
+                        config={'displayModeBar': False, 'scrollZoom': False},
+                        className='barchart'),
+
+                    dcc.Graph(
+                        id='graph-sexe',
+                        figure=fig_sexe,
+                        config={'displayModeBar': False, 'scrollZoom': False},
+                        className='barchart'),
+
+                    dcc.Graph(
+                        id='graph-age',
+                        figure=fig_age,
+                        config={'displayModeBar': False, 'scrollZoom': False},
+                        className='barchart')
+
+                ], className='col')
+
         ], className='row'
     )
 
@@ -171,21 +256,6 @@ coviprev_layout = html.Div([
 
 
 
-# Dashboard
-
-
-# def get_coviprev_dash(server):
-#     app_coviprev.server = server
-#     return app_coviprev
-
-
-
-
-# # Callbacks
-# @app_coviprev.callback(
-#     [Output(f'button-{i}', 'style') for i in range(len(targets))]
-#     + [Output('graph', 'figure')],
-#     [Input(f'button-{i}', 'n_clicks') for i in range(len(targets))])
 def update_target(*args):
     # Catch the target
     ctx = dash.callback_context
@@ -203,16 +273,12 @@ def update_target(*args):
         else:
             returns += [off_button_style]
 
-    # Update figure values : 0.006s againt more than 1s to create new fig
-    # values = get_values(targets[index])
-    # fig.__dict__['_data_objs'][0]['z'] = values[0]
-    # for i, val in enumerate(values):
-    #     fig.__dict__['_frame_objs'][i]['data'][0]['z'] = val
+    # Update figures
+    cible = targets[index]
 
-    # crange = ranges[targets[index]]
-    # fig.update_layout(coloraxis={'cmin': crange[0], 'cmax': crange[1]})
-
-    # returns += [fig]
-    returns += [plot_region(targets[index])]
+    returns += [update_region(cible)]
+    returns += [plot_fra(cible)]
+    returns += [plot_sexe(cible)]
+    returns += [plot_age(cible)]
 
     return returns

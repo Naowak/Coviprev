@@ -12,7 +12,7 @@ server = Flask(__name__)
 # app_coviprev.server = server
 stylesheets = [dbc.themes.BOOTSTRAP, 
               'https://codepen.io/chriddyp/pen/bWLwgP.css']
-app_coviprev = dash.Dash('__main__',
+app_coviprev = dash.Dash(__name__,
                         server=server, 
                         external_stylesheets=stylesheets)
 app_coviprev.layout = coviprev_layout
@@ -24,7 +24,8 @@ def show_coviprev_dash():
 
 @app_coviprev.callback(
     [Output(f'button-{i}', 'style') for i in range(len(targets))]
-    + [Output('graph', 'figure')],
+    + [Output(f'graph-{crit}', 'figure') 
+                    for crit in ['region', 'fra', 'sexe', 'age']],
     [Input(f'button-{i}', 'n_clicks') for i in range(len(targets))])
 def coviprev_update(*args):
     return update_target(*args)
