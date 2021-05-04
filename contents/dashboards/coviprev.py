@@ -4,7 +4,6 @@ import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-import textwrap
 
 from contents.utils import colors, on_button_style, off_button_style
 
@@ -82,8 +81,8 @@ def plot_region(cible):
         animation_frame='date',
         color_continuous_scale='Reds',
         range_color=region_range[cible],
-        opacity=0.5,
-        zoom=4.5, 
+        opacity=0.8,
+        zoom=3.3, 
         center={"lat": 46.71109, "lon": 1.7191036},
         labels=dict(zip(targets, legends)))
 
@@ -98,8 +97,9 @@ def plot_region(cible):
 
     fig_region.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
+        font={'color': 'white'},
         title=age_title[cible],
-        height=700,
+        height=400,
         width=900)
 
 
@@ -122,31 +122,37 @@ def update_region(cible):
 
 
 def plot_age(cible):
-    fig_age = px.bar(data['age'], x='date', y=cible, 
-                                    color='age', barmode='group')
+    fig_age = px.line(data['age'], x='date', y=cible, 
+                                    color='age')
+    fig_age.update_traces(mode='lines+markers')
     fig_age.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font={'color': 'white'},
         title=age_title[cible],
         legend={'title': ''},
         xaxis={'title': ''},
         yaxis={'title': ''},
-        height=300,
+        height=400,
         width=900)
 
     return fig_age
 
 
 def plot_sexe(cible):
-    fig_sexe = px.bar(data['sexe'], x='date', y=cible, 
-                                    color='sexe', barmode='group')
+    fig_sexe = px.line(data['sexe'], x='date', y=cible, color='sexe')
+
+    fig_sexe.update_traces(mode='lines+markers')
 
     fig_sexe.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font={'color': 'white'},
         title=sexe_title[cible],
         legend={'title': ''},
         xaxis={'title': ''},
         yaxis={'title': ''},
-        height=300,
+        height=400,
         width=900)
 
     return fig_sexe
@@ -154,14 +160,17 @@ def plot_sexe(cible):
 
 
 def plot_fra(cible):
-    fig_fra = px.bar(data['fra'], x='date', y=cible)
+    fig_fra = px.area(data['fra'], x='date', y=cible)
 
     fig_fra.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font={'color': 'white'},
         title=fra_title[cible],
         xaxis={'title': ''},
-        yaxis={'title': ''},
-        height=300,
+        yaxis={'title': '', 'range': [data['fra'][cible].min() - 2, 
+                                            data['fra'][cible].max() + 2]},
+        height=400,
         width=900)
 
     return fig_fra
@@ -179,44 +188,69 @@ fig_fra = plot_fra(targets[0])
 
 coviprev_layout = html.Div([
 
-    # Navbar
-    html.Div([
-        dbc.Navbar(
-            [
+    dbc.Navbar(
+        [
+            html.A(
                 dbc.Row(
                     [
-                        dbc.Col(html.Img(src='assets/logo.png', height="50px")),
-                        dbc.Col(dbc.NavbarBrand(
-                            "Naowak  |  Visualisation des données Coviprev", 
-                            className="navbar-domain")),
+                        dbc.Col(html.Img(src="assets/logo.png", height="40px")),
+                        dbc.Col(dbc.NavbarBrand("Naowak", className="navbar-home-text")),
                     ],
                     align="center",
                     no_gutters=True,
                 ),
-            ],
-            color=colors['dark'],
-            dark=True,
-        )
-    ]),
+                href="https://www.naowak.fr/",
+                className='navbar-home'
+            ),
+
+            html.A(
+                dbc.Row(
+                    [
+                        dbc.Col(dbc.NavbarBrand("Coviprev", className="navbar-coviprev-text")),
+                    ],
+                    align="center",
+                    no_gutters=True,
+                ),
+                href="https://www.naowak.fr/coviprev/",
+                className='navbar-coviprev'
+
+            )
+        ],
+        color=colors['dark'],
+        dark=True
+    ),
+
+    dbc.Navbar(
+        [
+            html.Div(
+                [
+                    html.Button(
+                        children=v,
+                        id='button-' + str(i), 
+                        n_clicks=0,
+                        style=on_button_style if i == 0 else off_button_style)
+                    for i, v in enumerate(labels)
+                ], className='targets'
+            ),
+        ],
+        color='#3A4352',
+        dark=True
+    ),
     
     # Graphs
     html.Div(
         [   
             html.Div(
                 [
-                    html.Div(
-                        [
-                            html.Button(
-                                children=v,
-                                id='button-' + str(i), 
-                                n_clicks=0,
-                                style=on_button_style if i == 0 else off_button_style)
-                            for i, v in enumerate(labels)
-                        ], className='targets'
-                    ),
 
                     html.Div(
-                        [
+                        [    
+                            dcc.Graph(
+                                id='graph-fra', 
+                                figure=fig_fra,
+                                config={'displayModeBar': False, 'scrollZoom': False},
+                                className='barchart'),
+
                             dcc.Graph(
                                 id='graph-region', 
                                 figure=fig_region,
@@ -229,12 +263,6 @@ coviprev_layout = html.Div([
 
             html.Div(
                 [
-                    dcc.Graph(
-                        id='graph-fra', 
-                        figure=fig_fra,
-                        config={'displayModeBar': False, 'scrollZoom': False},
-                        className='barchart'),
-
                     dcc.Graph(
                         id='graph-sexe',
                         figure=fig_sexe,

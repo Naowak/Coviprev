@@ -1,12 +1,25 @@
 body {
-    background-color: #F9F9F9;
+    background-color: #4B5463;
 }
 
-.navbar-domain {
-    color: white;
-    font-size:28px;
-    margin-left:15px;
+.navbar-home {
 }
+
+.navbar-home-text {
+    color: white;
+    font-size:24px;
+    margin-left: 15px;
+}
+
+.navbar-coviprev {
+}
+
+.navbar-coviprev-text {
+    color:white;
+    font-size:24px;
+    margin-left:700px;
+}
+
 
 .title {
     color:#293241;
@@ -17,8 +30,8 @@ body {
 
 .targets {
     color: white;
-    margin-top:50px;
-    margin-bottom:50px;
+    /*margin-top:50px;*/
+    /*margin-bottom:50px;*/
     text-align:center;
     margin-left: auto;
     margin-right: auto;

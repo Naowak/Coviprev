@@ -1,4 +1,4 @@
-colors = {'background': '#F9F9F9', 
+colors = {'background': '#3A4352', 
             'light': '#669DE6',
             'dark': '#293241',
             'show': '#E66666'}
