@@ -9,8 +9,6 @@ from contents.dashboards.coviprev import coviprev_layout, update_target, targets
 
 server = Flask(__name__)
 
-# app_coviprev = get_coviprev_dash(server)
-# app_coviprev.server = server
 stylesheets = [dbc.themes.BOOTSTRAP, 
               'https://codepen.io/chriddyp/pen/bWLwgP.css']
 app_coviprev = dash.Dash(__name__,
