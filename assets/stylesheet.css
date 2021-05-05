@@ -1,8 +1,5 @@
 body {
-    background-color: #4B5463;
-}
-
-.navbar-home {
+    background-color: #293241;
 }
 
 .navbar-home-text {
@@ -11,33 +8,51 @@ body {
     margin-left: 15px;
 }
 
-.navbar-coviprev {
-}
-
 .navbar-coviprev-text {
     color:white;
     font-size:24px;
-    margin-left:700px;
-}
-
-
-.title {
-    color:#293241;
-    text-align:center;
-    margin-left:auto;
-    margin-right:auto;
 }
 
 .targets {
-    color: white;
-    /*margin-top:50px;*/
-    /*margin-bottom:50px;*/
-    text-align:center;
-    margin-left: auto;
-    margin-right: auto;
+    position: absolute;
+    left:50%;
+    transform: translateX(-50%);
 }
 
-.map {
-    margin-right: auto;
-    margin-left: auto;
-}   
+.graphic {
+    border-radius: 5px;
+    background-color: #3A4352;
+    /*box-shadow: 2px 2px 2px #445566;*/
+} 
+
+.text-credit {
+    padding-top: 26px;
+    padding-left: 45px;
+    padding-bottom: 26px;
+}
+
+#graph-fra {
+    margin-top: 30px;
+    margin-left: 40px;
+}
+
+#graph-region {
+    margin-top: 30px;
+    margin-left: 40px;
+}
+
+#graph-sexe {
+    margin-top: 30px;
+    margin-right: 40px
+}
+
+#graph-age {
+    margin-top: 30px;
+    margin-right : 40px
+}
+
+#credits {
+    margin-top: 30px;
+    margin-right: 40px;
+    color: white;
+}

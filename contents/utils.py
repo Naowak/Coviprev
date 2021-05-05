@@ -5,8 +5,8 @@ colors = {'background': '#3A4352',
 
 off_button_style = {'background-color': colors['dark'],
                       'color': 'white',
-                      'height': '50px'}
+                      'height': '40px'}
 
 on_button_style = {'background-color': colors['light'],
                     'color': 'white',
-                    'height': '50px'}
+                    'height': '40px'}
