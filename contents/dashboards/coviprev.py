@@ -10,7 +10,7 @@ from contents.utils import on_button_style, off_button_style
 
 
 # Load data
-data = pd.read_excel('data/coviprev22.xlsx', 
+data = pd.read_excel('data/coviprev23.xlsx', 
                             engine='openpyxl', 
                             sheet_name=None)
 
@@ -135,7 +135,7 @@ def plot_age(cible):
         plot_bgcolor='rgba(0,0,0,0)',
         font={'color': 'white'},
         title=age_title[cible],
-        legend={'title': ''},
+        legend={'title': '', 'yanchor': 'top', 'y': 0.75},
         xaxis={'title': '', 'range': [date_min, date_max], 
             'gridcolor': '#556677'},
         yaxis={'title': '', 'gridcolor': '#556677'},
@@ -148,11 +148,15 @@ def plot_age(cible):
     fig_age.add_vrect(x0='2020-10-30', x1='2020-12-15', line_width=0,
         annotation_text='confinement n°2', fillcolor="red", opacity=0.1,
         annotation_position='top left', annotation={'font_size': 14})
+    fig_age.add_vrect(x0='2021-04-03', x1='2021-04-23', line_width=0,
+        annotation_text='confinement n°3', fillcolor="red", opacity=0.1,
+        annotation_position='top left', annotation={'font_size': 14})
+
     fig_age.add_vrect(x0='2020-10-17', x1='2020-10-30', line_width=0,
-        annotation_text='Couvre-feu partiel', fillcolor='green', opacity=0.1,
+        annotation_text='Couvre-feu partiel', fillcolor='yellow', opacity=0.05,
         annotation_position='bottom right', annotation={'font_size': 14})
-    fig_age.add_vrect(x0='2020-12-15', x1='2021-03-17', line_width=0,
-        annotation_text='Couvre-feu généralisé', fillcolor='green', opacity=0.1,
+    fig_age.add_vrect(x0='2020-12-15', x1='2021-04-03', line_width=0,
+        annotation_text='Couvre-feu généralisé', fillcolor='yellow', opacity=0.05,
         annotation_position='bottom right', annotation={'font_size': 14})
 
     return fig_age
@@ -168,7 +172,7 @@ def plot_sexe(cible):
         plot_bgcolor='rgba(0,0,0,0)',
         font={'color': 'white'},
         title=sexe_title[cible],
-        legend={'title': ''},
+        legend={'title': '', 'yanchor': 'top', 'y': 0.75},
         xaxis={'title': '', 'range': [date_min, date_max], 'gridcolor': '#556677'},
         yaxis={'title': '', 'gridcolor': '#556677'},
         height=320,
@@ -180,11 +184,15 @@ def plot_sexe(cible):
     fig_sexe.add_vrect(x0='2020-10-30', x1='2020-12-15', line_width=0,
         annotation_text='confinement n°2', fillcolor="red", opacity=0.1,
         annotation_position='top left', annotation={'font_size': 14})
+    fig_sexe.add_vrect(x0='2021-04-03', x1='2021-04-23', line_width=0,
+        annotation_text='confinement n°3', fillcolor="red", opacity=0.1,
+        annotation_position='top left', annotation={'font_size': 14})
+
     fig_sexe.add_vrect(x0='2020-10-17', x1='2020-10-30', line_width=0,
-        annotation_text='Couvre-feu partiel', fillcolor='green', opacity=0.1,
+        annotation_text='Couvre-feu partiel', fillcolor='yellow', opacity=0.05,
         annotation_position='bottom right', annotation={'font_size': 14})
-    fig_sexe.add_vrect(x0='2020-12-15', x1='2021-03-17', line_width=0,
-        annotation_text='Couvre-feu généralisé', fillcolor='green', opacity=0.1,
+    fig_sexe.add_vrect(x0='2020-12-15', x1='2021-04-03', line_width=0,
+        annotation_text='Couvre-feu généralisé', fillcolor='yellow', opacity=0.05,
         annotation_position='bottom right', annotation={'font_size': 14})
 
     return fig_sexe
@@ -199,7 +207,7 @@ def plot_fra(cible):
         plot_bgcolor='rgba(0,0,0,0)',
         font={'color': 'white'},
         title=fra_title[cible],
-        xaxis={'title': '', 'gridcolor': '#556677'},
+        xaxis={'title': '', 'gridcolor': '#556677', 'range': [date_min, date_max]},
         yaxis={'title': '', 'gridcolor': '#556677',
             'range': [data['fra'][cible].min() - 2, data['fra'][cible].max() + 2]},
         height=320,
@@ -211,11 +219,15 @@ def plot_fra(cible):
     fig_fra.add_vrect(x0='2020-10-30', x1='2020-12-15', line_width=0,
         annotation_text='confinement n°2', fillcolor="red", opacity=0.1,
         annotation_position='top left', annotation={'font_size': 14})
+    fig_fra.add_vrect(x0='2021-04-03', x1='2021-04-23', line_width=0,
+        annotation_text='confinement n°3', fillcolor="red", opacity=0.1,
+        annotation_position='top left', annotation={'font_size': 14})
+
     fig_fra.add_vrect(x0='2020-10-17', x1='2020-10-30', line_width=0,
-        annotation_text='Couvre-feu partiel', fillcolor='green', opacity=0.1,
+        annotation_text='Couvre-feu partiel', fillcolor='yellow', opacity=0.05,
         annotation_position='bottom right', annotation={'font_size': 14})
-    fig_fra.add_vrect(x0='2020-12-15', x1='2021-03-17', line_width=0,
-        annotation_text='Couvre-feu généralisé', fillcolor='green', opacity=0.1,
+    fig_fra.add_vrect(x0='2020-12-15', x1='2021-04-03', line_width=0,
+        annotation_text='Couvre-feu généralisé', fillcolor='yellow', opacity=0.05,
         annotation_position='bottom right', annotation={'font_size': 14})
 
     return fig_fra
