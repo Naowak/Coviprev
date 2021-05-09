@@ -22,7 +22,7 @@ python main.py
 ```
 Et y accèder sur votre navigateur web via l'adresse
 ```
-http://127.0.0.1:8050/
+http://127.0.0.1:5000/
 ```
 
 # Références
